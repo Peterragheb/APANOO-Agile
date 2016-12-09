@@ -19,6 +19,7 @@ import customfonts.MyTextView;
 
 public class welcome extends AppCompatActivity {
     private MyTextView play;
+    private MyTextView rank;
     private Users user;
     private LinearLayout profile;
     private MyTextView welcusername;
@@ -34,6 +35,7 @@ public class welcome extends AppCompatActivity {
         mContentView = findViewById(R.id.fullscreen_content);
         hide();
         profile = (LinearLayout)findViewById(R.id.profile);
+        rank = (MyTextView) findViewById(R.id.Rank);
         play = (MyTextView) findViewById(R.id.play);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +55,15 @@ public class welcome extends AppCompatActivity {
                 finish();
             }
         });
-
+        rank.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(welcome.this,Rank.class);
+                it.putExtra("Users", user);
+                startActivity(it);
+                finish();
+            }
+        });
     }
     @Override
     protected void onStart(){

@@ -18,7 +18,7 @@ import android.widget.TextView;
 import customfonts.MyTextView;
 
 /**
- * Created by omar_adel on 11/21/2016.
+ * Created by APANOO on 11/21/2016.
  */
 
 public class profile extends AppCompatActivity {
@@ -31,6 +31,7 @@ public class profile extends AppCompatActivity {
     private MyTextView signout;
     private View mContentView;
     private TextView scoreofuser;
+    private TextView Engscoreofuser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,9 @@ public class profile extends AppCompatActivity {
         propic=(ImageView)findViewById(R.id.propic);
         signout=(MyTextView)findViewById(R.id.signout);
         scoreofuser=(TextView)findViewById(R.id.scoreofprofile);
-        scoreofuser.setText(String.valueOf(user.getScore()));
+        scoreofuser.setText(String.valueOf(user.getMathScore()));
+        Engscoreofuser=(TextView)findViewById(R.id.Engscore);
+        Engscoreofuser.setText(String.valueOf(user.getEngScore()));
         signout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){

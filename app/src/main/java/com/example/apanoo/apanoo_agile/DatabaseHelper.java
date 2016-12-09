@@ -5,7 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by APANOO on 11/18/16.
@@ -20,10 +24,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_EMAIL = "EMAIL";
     private static final String COLUMN_PASS = "PASS";
     private static final String COLUMN_PROFILE_PIC = "PROFILE_PIC";
-    private static final String COLUMN_SCORE= "SCORE";
+    private static final String COLUMN_MATHSCORE= "MATHSCORE";
+    private static final String COLUMN_ENGSCORE= "ENGSCORE";
     SQLiteDatabase db;
     private static final String TABLE_CREATE = "create table users(ID integer primary key not null, " +
-            "USERNAME varchar(255) unique not null, EMAIL  varchar(255) unique not null, PASS text not null, PROFILE_PIC varchar(255) not null ,SCORE integer not null);";
+            "USERNAME varchar(255) unique not null, EMAIL  varchar(255) unique not null, PASS text not null, PROFILE_PIC varchar(255) not null ,MATHSCORE integer not null ,ENGSCORE integer not null);";
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -45,7 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public void insertUser(Users c) {
+    public void insertUser(Users c) {///henaaaaaa
         int score=0;
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -58,7 +63,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_EMAIL, c.getEmail());
         values.put(COLUMN_PASS, c.getPass());
         values.put(COLUMN_PROFILE_PIC, path.toString());
-        values.put(COLUMN_SCORE, score);
+        values.put(COLUMN_MATHSCORE, score);
+        values.put(COLUMN_ENGSCORE, score);
         db.insert(TABLE_NAME,null, values);
         db.close();
     }
@@ -68,11 +74,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentvalues.put(COLUMN_PROFILE_PIC,New);
         db.update(TABLE_NAME, contentvalues, COLUMN_USERNAME + " = ? AND " + COLUMN_PROFILE_PIC+ " = ?", new String[]{Username,Old});
     }
-    public void Update_Score(String Username,int Old,int New){
+    public void Update_MathScore(String Username,int Old,int New){
         db = this.getReadableDatabase();
         ContentValues contentvalues=new ContentValues();
-        contentvalues.put(COLUMN_SCORE,New);
-        db.update(TABLE_NAME, contentvalues, COLUMN_USERNAME + " = ? AND " + COLUMN_SCORE+ " = ?", new String[]{Username,String.valueOf(Old)});
+        contentvalues.put(COLUMN_MATHSCORE,New);
+        db.update(TABLE_NAME, contentvalues, COLUMN_USERNAME + " = ? AND " + COLUMN_MATHSCORE+ " = ?", new String[]{Username,String.valueOf(Old)});
+    }
+    public void Update_EngScore(String Username,int Old,int New){
+        db = this.getReadableDatabase();
+        ContentValues contentvalues=new ContentValues();
+        contentvalues.put(COLUMN_ENGSCORE,New);
+        db.update(TABLE_NAME, contentvalues, COLUMN_USERNAME + " = ? AND " + COLUMN_ENGSCORE+ " = ?", new String[]{Username,String.valueOf(Old)});
+    }
+    public void GetMathRank(TextView textView,String Uname){
+        db = this.getReadableDatabase();
+        Cursor cr=db.query(false,TABLE_NAME,null,null,null,null,null,COLUMN_ENGSCORE+" DESC",null);
+        textView.setText("");
+        int ranking=1;
+        while (cr.moveToNext()){
+            if(cr.getString(1).equals(Uname))
+            {
+                textView.setTypeface(null, Typeface.BOLD);
+                textView.append(ranking+" "+cr.getString(1)+" "+cr.getString(5)+"\n");
+                ranking++;
+                textView.setTypeface(null, Typeface.NORMAL);
+                continue;
+            }
+            else{
+            textView.append(ranking+" "+cr.getString(1)+" "+cr.getString(5)+"\n");
+            ranking++;
+        }
+        }
+    }
+    public void GetEngRank(TextView textView,String Uname){
+        db = this.getReadableDatabase();
+        Cursor cr=db.query(false,TABLE_NAME,null,null,null,null,null,COLUMN_ENGSCORE+" DESC",null);
+        textView.setText("");
+        int ranking=1;
+        while (cr.moveToNext()){
+            if(cr.getString(1).equals(Uname))
+            {
+                textView.setTypeface(null, Typeface.BOLD);
+                textView.append(ranking+" "+cr.getString(1)+" "+cr.getString(6)+"\n");
+                ranking++;
+                textView.setTypeface(null, Typeface.NORMAL);
+                continue;
+            }
+            else{
+                textView.append(ranking+" "+cr.getString(1)+" "+cr.getString(6)+"\n");
+                ranking++;
+        }
+        }
     }
     public String GetColumn (String uname,String Column_name){
         db = this.getReadableDatabase();
@@ -125,7 +177,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                 }
                 break;
-            case "Score":
+            case "MathScore":
                 if (cr.moveToFirst())
                 {
                     do {
@@ -133,6 +185,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         if(a.equals(uname))
                         {
                             Result = String.valueOf(cr.getInt(5));
+                            break;
+                        }
+                    }
+                    while(cr.moveToNext());
+
+                }
+                break;
+            case "EngScore":
+                if (cr.moveToFirst())
+                {
+                    do {
+                        a = cr.getString(1);
+                        if(a.equals(uname))
+                        {
+                            Result = String.valueOf(cr.getInt(6));
                             break;
                         }
                     }

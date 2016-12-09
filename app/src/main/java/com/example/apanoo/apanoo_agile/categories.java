@@ -49,6 +49,15 @@ public class categories extends AppCompatActivity {
                 finish();
             }
         });
+        English.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent it=new Intent(categories.this,EnglishGame.class);
+                it.putExtra("Users", user);
+                startActivity(it);
+                finish();
+            }
+        });
     }
     @Override
     public void onBackPressed()
